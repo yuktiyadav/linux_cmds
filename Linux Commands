@@ -1,0 +1,201 @@
+//Create a Bash script named internsctl with executable permissions
+touch internsctl
+chmod +x internsctl
+//Edit the internsctl script to include the following code
+#!/bin/bash
+
+# Function to display manual page
+show_manual() {
+    echo "internsctl - Custom Linux Command"
+    echo "Usage: internsctl [OPTIONS]"
+    echo
+    echo "Options:"
+    echo "  --help     Display help and usage guidelines"
+    echo "  --version  Display command version"
+    echo
+    echo "Description:"
+    echo "  This command performs specific operations for interns."
+}
+
+# Function to display help
+show_help() {
+    echo "Usage: internsctl [OPTIONS]"
+    echo "Perform operations for interns."
+    echo
+    echo "Options:"
+    echo "  --help     Display this help message"
+    echo "  --version  Display command version"
+    echo
+    echo "Example:"
+    echo "  internsctl --help"
+}
+
+# Main script logic
+if [ "$1" == "--help" ]; then
+    show_help
+elif [ "$1" == "--version" ]; then
+    echo "internsctl v0.1.0"
+else
+    show_manual
+fi
+
+//Make sure the script is executable.
+chmod +x internsctl
+
+
+
+
+Section B
+Part1| Level Easy
+
+cd ~/customcommands
+nano internsctl
+#!/bin/bash
+
+# Function to display manual page
+show_manual() {
+    echo "internsctl - Custom Linux Command"
+    echo "Usage: internsctl [OPTIONS]"
+    echo
+    echo "Options:"
+    echo "  memory getinfo   Display memory information of the server"
+    echo "  --help           Display help and usage guidelines"
+    echo "  --version        Display command version"
+    echo
+    echo "Description:"
+    echo "  This command performs specific operations for interns."
+}
+
+# Function to get memory information
+get_memory_info() {
+    free
+}
+
+# Main script logic
+if [ "$1" == "memory" ] && [ "$2" == "getinfo" ]; then
+    get_memory_info
+elif [ "$1" == "--help" ]; then
+    show_manual
+elif [ "$1" == "--version" ]; then
+    echo "internsctl v0.1.0"
+else
+    show_manual
+fi
+chmod +x internsctl
+internsctl memory getinfo
+
+
+Part 2|Level Intermediate
+
+cd ~/customcommands
+nano internsctl
+#!/bin/bash
+
+# Function to display manual page
+show_manual() {
+    echo "internsctl - Custom Linux Command"
+    echo "Usage: internsctl [OPTIONS] [ARGUMENTS]"
+    echo
+    echo "Options:"
+    echo "  user create <username>   Create a new user with the given username"
+    echo "  user list                List all regular users on the server"
+    echo "  user list --sudo-only    List users with sudo permissions"
+    echo "  --help                   Display help and usage guidelines"
+    echo "  --version                Display command version"
+    echo
+    echo "Description:"
+    echo "  This command performs specific operations for interns."
+}
+
+# Function to create a new user
+create_user() {
+    username="$1"
+    sudo useradd -m "$username"
+    sudo passwd "$username"
+}
+
+# Function to list all regular users
+list_users() {
+    getent passwd | grep -vE "/s?bin/(nologin|false)" | cut -d: -f1
+}
+
+# Function to list users with sudo permissions
+list_sudo_users() {
+    getent passwd | grep -vE "/s?bin/(nologin|false)" | grep -E ":/home|/home:/bin/bash" | cut -d: -f1
+}
+
+# Main script logic
+if [ "$1" == "user" ]; then
+    if [ "$2" == "create" ]; then
+        create_user "$3"
+    elif [ "$2" == "list" ]; then
+        if [ "$3" == "--sudo-only" ]; then
+            list_sudo_users
+        else
+            list_users
+        fi
+    else
+        show_manual
+    fi
+elif [ "$1" == "--help" ]; then
+    show_manual
+elif [ "$1" == "--version" ]; then
+    echo "internsctl v0.2.0"
+else
+    show_manual
+fi
+chmod +x internsctl
+
+Part 3|Advanced Level
+#!/bin/bash
+
+# Function to display manual page
+show_manual() {
+    echo "internsctl - Custom Linux Command"
+    echo "Usage: internsctl file getinfo [OPTIONS] <file-name>"
+    echo
+    echo "Options:"
+    echo "  --size, -s           Print file size"
+    echo "  --permissions, -p    Print file permissions"
+    echo "  --owner, -o          Print file owner"
+    echo "  --last-modified, -m  Print last modified time"
+    echo "  --help               Display help and usage guidelines"
+    echo "  --version            Display command version"
+    echo
+    echo "Description:"
+    echo "  Get information about a specified file."
+}
+
+# Function to get file information
+get_file_info() {
+    file="$1"
+
+    if [ -f "$file" ]; then
+        if [ "$2" == "--size" ] || [ "$2" == "-s" ]; then
+            stat -c "%s" "$file"
+        elif [ "$2" == "--permissions" ] || [ "$2" == "-p" ]; then
+            stat -c "%A" "$file"
+        elif [ "$2" == "--owner" ] || [ "$2" == "-o" ]; then
+            stat -c "%U" "$file"
+        elif [ "$2" == "--last-modified" ] || [ "$2" == "-m" ]; then
+            stat -c "%y" "$file"
+        else
+            show_manual
+        fi
+    else
+        echo "Error: File '$file' not found."
+    fi
+}
+
+# Main script logic
+if [ "$1" == "file" ] && [ "$2" == "getinfo" ]; then
+    get_file_info "$3" "$4"
+elif [ "$1" == "--help" ]; then
+    show_manual
+elif [ "$1" == "--version" ]; then
+    echo "internsctl v0.3.0"
+else
+    show_manual
+fi
+chmod +x internsctl
+
